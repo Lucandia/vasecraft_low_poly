@@ -1,12 +1,12 @@
 # VaseCraft: Low-Poly Vase Generator
 Generate low-poly vases for 3D printing in vase mode.
-Visit the original [Printables page](https://www.printables.com/it/model/520333-texttango-dual-letter-illusion)!
+Visit the original [Printables page](LINK)!
 
 ## Try the web app:
 
-[TextTango web app](https://texttango-dual-letter-illusion.streamlit.app/) powered by streamlit
+[VaseCraft web app](LINK) powered by streamlit
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://texttango-dual-letter-illusion.streamlit.app/)
+[![Streamlit App](LINK)
 
 ## Customize the vase
 
@@ -27,8 +27,6 @@ Enjoy!
 I enjoy working on this project in my free time, if you want to support me with a coffee just [click here!](https://www.paypal.com/donate/?hosted_button_id=V4LJ3Z3B3KXRY)
 
 ## License
-
-You can find the font licence in the respective font folder. For more information visit the [google font page](https://fonts.google.com/)!
 
 Code is licensed under the GNU General Public License v3.0 ([GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.en.html))
 
