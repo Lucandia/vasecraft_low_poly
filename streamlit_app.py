@@ -21,7 +21,7 @@ if __name__ == "__main__":
                 print(f'Cannot remove file {file}')
 
     st.title('VaseCraft: Low-Poly Vase Generator')
-    st.write("Generate low-poly vases for 3D printing in vase mode.! If you like the project put a like on [Printables](LINK) or [support me with a coffee](https://www.paypal.com/donate/?hosted_button_id=V4LJ3Z3B3KXRY)! On Printables you can find more info about the project.", unsafe_allow_html=True)
+    st.write("Generate low-poly vases for 3D printing in vase mode.! If you like the project put a like on [Printables](https://www.printables.com/it/model/556002-vasecraft-low-poly-vase-generator) or [support me with a coffee](https://www.paypal.com/donate/?hosted_button_id=V4LJ3Z3B3KXRY)! On Printables you can find more info about the project.", unsafe_allow_html=True)
 
     # output file type
     _, _, col3, _, _ = st.columns(5)
@@ -132,7 +132,7 @@ if __name__ == "__main__":
                         file_name=f'vase.{out}',
                         mime=f"model/{out}"
                     )
-        st.markdown("Post the make [on Printables](LINK) to support the project!", unsafe_allow_html=True)
+        st.markdown("Post the make [on Printables](https://www.printables.com/it/model/556002-vasecraft-low-poly-vase-generator) to support the project!", unsafe_allow_html=True)
         st.markdown("I am a student who enjoys 3D printing and programming. To support me with a coffee, just [click here!](https://www.paypal.com/donate/?hosted_button_id=V4LJ3Z3B3KXRY)", unsafe_allow_html=True)
 
         col1, col2 = st.columns(2)
