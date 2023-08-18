@@ -43,7 +43,7 @@ if __name__ == "__main__":
     with col2:
         tilt = st.slider('Tilt', -r+1, r, step=1, value=r//5) # add a slope to the vase wall
     with col3:
-        tilt_res = st.slider('Tilt of each block', -r, r, step=1, value=r//10) # add a tilt to each block
+        tilt_res = st.slider('Tilt of each block', -r+1, r, step=1, value=r//10) # add a tilt to each block
 
     col1, col2, col3 = st.columns(3)
     with col1:
