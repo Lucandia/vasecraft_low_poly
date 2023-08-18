@@ -41,7 +41,7 @@ if __name__ == "__main__":
         n_block = st.slider('N° blocks', 1, height//5, step=1, value=6) # number of blocks
         res = height/n_block # height of each block
     with col2:
-        tilt = st.slider('Tilt', -r, r, step=1, value=r//5) # add a slope to the vase wall
+        tilt = st.slider('Tilt', -r+1, r, step=1, value=r//5) # add a slope to the vase wall
     with col3:
         tilt_res = st.slider('Tilt of each block', -r, r, step=1, value=r//10) # add a tilt to each block
 
