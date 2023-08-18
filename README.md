@@ -1,6 +1,6 @@
 # VaseCraft: Low-Poly Vase Generator
 Generate low-poly vases for 3D printing in vase mode.
-Visit the original [Printables page](LINK)!
+Visit the original [Printables page](https://www.printables.com/it/model/556002-vasecraft-low-poly-vase-generator)!
 
 ## Try the web app:
 
