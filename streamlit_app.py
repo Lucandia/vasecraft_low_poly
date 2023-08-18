@@ -123,8 +123,8 @@ if __name__ == "__main__":
         st.error('The program was not able to generate the mesh.', icon="🚨")
     else:
         st.success(f'Rendered in {int(end-start)} seconds', icon="✅")
-        _, col2, _ = st.columns(3)
-        with col2:
+        _, _, col3, _, _ = st.columns(5)
+        with col3:
             with open(f'vase.{out}', "rb") as file:
                 btn = st.download_button(
                         label=f"Download {out}",
