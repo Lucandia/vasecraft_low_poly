@@ -49,7 +49,8 @@ if __name__ == "__main__":
     with col1:
         concave = st.checkbox('Concave shape') # make a concave shape (like a star)
     with col2:
-        twist = st.slider('Twist', 0, 360, step=1, value=45) # twist angle of the vase
+        max_ang = int((sides-2)*180/sides)
+        twist = st.slider('Twist', -max_ang, max_ang, step=1, value=max_ang/2) # twist angle of the vase
     with col3:
         alternate_twist = st.checkbox('Alternate twist') # alternate the twist
 
