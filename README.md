@@ -6,7 +6,7 @@ Visit the original [Printables page](https://www.printables.com/it/model/556002-
 
 [VaseCraft web app](https://vasecraft.streamlit.app/) powered by streamlit
 
-[![Streamlit App](https://vasecraft.streamlit.app/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://vasecraft.streamlit.app/)
 
 ## Customize the vase
 
