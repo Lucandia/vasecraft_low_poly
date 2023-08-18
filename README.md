@@ -4,9 +4,9 @@ Visit the original [Printables page](https://www.printables.com/it/model/556002-
 
 ## Try the web app:
 
-[VaseCraft web app](LINK) powered by streamlit
+[VaseCraft web app](https://vasecraft.streamlit.app/) powered by streamlit
 
-[![Streamlit App](LINK)
+[![Streamlit App](https://vasecraft.streamlit.app/)
 
 ## Customize the vase
 
