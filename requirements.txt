@@ -1,2 +1,2 @@
-git+https://github.com/gumyr/build123
+git+https://github.com/gumyr/build123d
 streamlit
