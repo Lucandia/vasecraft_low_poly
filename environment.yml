@@ -1,7 +1,4 @@
 name: build123d
-channels:
-  - conda-forge
-  - defaults
 dependencies:
   - python
   - pip
