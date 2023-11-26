@@ -24,7 +24,5 @@ dependencies:
     - certifi 
     - numpy-stl 
     - git+https://github.com/jdegenstein/py-lib3mf 
-    - "svgpathtools>=1.5.1,<2"
-    - "svgelements>=1.9.1,<2"
     - git+https://github.com/gumyr/build123d 
     - git+https://github.com/snoyer/ocpsvg
