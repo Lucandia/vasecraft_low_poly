@@ -1,0 +1,6 @@
+name: build123d
+dependencies:
+  - python=3.9
+  - pip
+  - pip:
+    - git+https://github.com/gumyr/build123d
