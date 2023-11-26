@@ -3,10 +3,10 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.9
-  - cadquery
+  - python
   - pip
   - pip:
+    - cadquery
     - svgwrite 
     - svgpathtools
     - anytree 
