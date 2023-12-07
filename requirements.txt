@@ -1,3 +1,1 @@
-cadquery
-cadquery-ocp
 build123d
