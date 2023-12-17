@@ -1,18 +1,54 @@
 # Import libraries
-from build123d import *
+import cadquery as cq
 from math import cos, sin, sqrt, pi
+from uuid import uuid4
 import streamlit as st
+import streamlit.components.v1 as components
 import os
 import time
-import base64
 
-def render_svg(svg):
-    """Renders the given svg string."""
-    b64 = base64.b64encode(svg.encode('utf-8')).decode("utf-8")
-    html = r'<img src="data:image/svg+xml;base64,%s"/>' % b64
-    st.write(html, unsafe_allow_html=True)
+def __stl_preview(color, render):
+    # Load and embed the JavaScript file
+    with open("js/three.min.js", "r") as js_file:
+        three_js = js_file.read()
+
+    with open("js/STLLoader.js", "r") as js_file:
+        stl_loader = js_file.read()
+
+    with open("js/OrbitControls.js", "r") as js_file:
+        orbital_controls = js_file.read()
+
+    with open("js/stl-viewer.js", "r") as js_file:
+        stl_viewer_component = (
+            js_file.read()
+            .replace('{__REPLACE_COLOR__}',f'0x{color[1:]}')
+            .replace('{__REPLACE_MATERIAL__}',render)
+        )
+
+    components.html(
+        r'<div style="height:500px">'+
+        r'<script>'+
+        three_js+' '+
+        stl_loader+' '+
+        orbital_controls+' '+
+        'console.log(\'frizzle\');'+
+        stl_viewer_component+' '+
+        r'</script>'+
+        r'<stl-viewer model="'+f"vase_{st.session_state['session_id']}"+'.stl?cache='+str(time.time())+r'"></stl-viewer>'+
+        # r'<stl-viewer model="vase.stl?cache=' + str(time.time()) + r'"></stl-viewer>'+
+        # r'<stl-viewer model="./app/static/'+f"vase.{out}"+"_"+str(session_id)+'.stl?cache='+str(time.time())+r'"></stl-viewer>'+
+        r'</div>',
+        height = 500
+    )
+
 
 if __name__ == "__main__":
+    # initiate sessiion state
+    if 'init' not in st.session_state:
+        st.session_state['init'] = True
+    if "session_id" not in st.session_state:
+        st.session_state['session_id'] = uuid4()
+
     for file in os.listdir():
         if 'file' in file:
             try:
@@ -70,52 +106,52 @@ if __name__ == "__main__":
         tilt_block = tilt/blocks
         dim = [r+tilt_block*i+tilt_res*(i%2) for i in range(blocks+1)]
 
-        rt_twist = 0
-        with BuildPart() as vase:
-            for i in range(blocks):
-                if concave:
-                    r_arr1 = [dim[i], dim[i]*concave_perc/100]
-                    r_arr2 = [dim[i+1], dim[i+1]*concave_perc/100]
-                else:
-                    r_arr1 = [dim[i], dim[i]]
-                    r_arr2 = [dim[i+1], dim[i+1]]
-                ps1 = [[cos(xy_angle*k*pi/180)*r_arr1[k%2], sin(xy_angle*k*pi/180)*r_arr1[k%2]] for k in range(sides)]
-                ps2 = [[cos(xy_angle*k*pi/180)*r_arr2[k%2], sin(xy_angle*k*pi/180)*r_arr2[k%2]] for k in range(sides)]
-                with BuildSketch(Plane.XY.offset(res*i).rotated((0,0,rt_twist))) as sk_bot:
-                    Polygon(*ps1)
-                if not alternate_twist:
-                    rt_twist += twist_block
-                else:
-                    if i%2==0:
-                        rt_twist += twist_block
-                    else:
-                        rt_twist -= twist_block
-                with BuildSketch(Plane.XY.offset(res*(i+1)).rotated((0,0,rt_twist))) as sk_top:
-                    Polygon(*ps2)
-                loft()
+        ### Cadquery file generation
 
-        if out == 'stl':
-            vase.part.export_stl('vase.stl')
-        elif out == 'step':
-            vase.part.export_step('vase.step')
+    if concave:
+        sides *= 2
+    xy_angle = 360 / sides
+    blocks = int(height/res)
+    twist_block = twist/blocks
+    tilt_block = tilt/blocks
+    dim = [r+tilt_block*i+tilt_res*(i%2) for i in range(blocks+1)]
+        
+    rt_twist = 0
+    for i in range(blocks):
+        if concave:
+            r_arr1 = [dim[i], dim[i]*concave_perc/100]
+            r_arr2 = [dim[i+1], dim[i+1]*concave_perc/100]
+        else:
+            r_arr1 = [dim[i], dim[i]]
+            r_arr2 = [dim[i+1], dim[i+1]]
+        ps1 = [[cos(xy_angle*k*pi/180)*r_arr1[k%2], sin(xy_angle*k*pi/180)*r_arr1[k%2]] for k in range(sides)]
+        s1 = cq.Sketch().polygon(ps1, angle=rt_twist)
+        if not alternate_twist:
+            rt_twist += twist_block
+        else: 
+            if i%2==0:
+                rt_twist += twist_block
+            else:
+                rt_twist -= twist_block
+        ps2 = [[cos(xy_angle*k*pi/180)*r_arr2[k%2], sin(xy_angle*k*pi/180)*r_arr2[k%2]] for k in range(sides)]
+        s2 = cq.Sketch().polygon(ps2, angle=rt_twist)
 
-        visible, hidden = vase.part.project_to_viewport((r*2, r*2, height/2))
-        max_dimension = max(*Compound(children=visible + hidden).bounding_box().size)
-        exporter = ExportSVG(scale= 50 / max_dimension)
-        exporter.add_layer("Hidden", line_color=(200, 200, 200), line_type=LineType.DASHED, line_weight=0.25)
-        exporter.add_layer("Visible", line_color=(50, 50, 50), line_weight=0.5)
-        exporter.add_shape(hidden, layer="Hidden")
-        exporter.add_shape(visible, layer="Visible")
-        exporter.write("vase_side.svg")
-
-        visible, hidden = vase.part.project_to_viewport((0, 0, height*2))
-        max_dimension = max(*Compound(children=visible + hidden).bounding_box().size)
-        exporter = ExportSVG(scale= 50 / max_dimension)
-        exporter.add_layer("Hidden", line_color=(200, 200, 200), line_type=LineType.DASHED, line_weight=0.25)
-        exporter.add_layer("Visible", line_color=(50, 50, 50), line_weight=0.5)
-        exporter.add_shape(hidden, layer="Hidden")
-        exporter.add_shape(visible, layer="Visible")
-        exporter.write("vase_top.svg")
+        if i==0:
+            result = (
+                cq.Workplane()
+                .placeSketch(s1, s2.moved(cq.Location(cq.Vector(0, 0, res))))
+                .loft()
+                )
+        else:
+            result = (result.
+                    faces(">Z")
+                    .workplane()
+                    .placeSketch(s1, s2.moved(cq.Location(cq.Vector(0, 0, res))))
+                    .loft()
+                            )
+    
+    cq.exporters.export(result, f"vase_{st.session_state['session_id']}.stl")
+    cq.exporters.export(result, f"vase.{out}")
 
         ### END BUILD123D PART
 
@@ -138,11 +174,7 @@ if __name__ == "__main__":
 
         col1, col2 = st.columns(2)
         with col1:
-            st.write("Vase side:")
-            with open('vase_side.svg', 'r') as f:
-                render_svg(f.read())
+            render = st.selectbox(f"Render", ["material", "wireframe"], label_visibility="collapsed", key="model_render")
         with col2:
-            st.write("Vase top:")
-            with open('vase_top.svg', 'r') as f:
-                render_svg(f.read())
-
+            color = st.color_picker(f'Model Color', '#505050', label_visibility="collapsed", key="model_color")
+        __stl_preview(color, render)
