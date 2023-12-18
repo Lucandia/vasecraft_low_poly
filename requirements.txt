@@ -1,2 +1,6 @@
-uuid
+pyvista
+ipython
+ipywidgets
+trame
+trame-vtk
 cadquery

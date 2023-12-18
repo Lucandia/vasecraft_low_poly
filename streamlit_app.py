@@ -1,13 +1,12 @@
 # Import libraries
 import cadquery as cq
-from math import cos, sin, sqrt, pi
 from uuid import uuid4
+from math import cos, sin, sqrt, pi
 import streamlit as st
-import streamlit.components.v1 as components
 import os
 import time
 
-def __stl_preview(color, render):
+def stl_preview(color, render):
     # Load and embed the JavaScript file
     with open("js/three.min.js", "r") as js_file:
         three_js = js_file.read()
@@ -25,7 +24,8 @@ def __stl_preview(color, render):
             .replace('{__REPLACE_MATERIAL__}',render)
         )
 
-    components.html(
+    session_id = st.session_state['session_id']
+    st.components.v1.html(
         r'<div style="height:500px">'+
         r'<script>'+
         three_js+' '+
@@ -34,20 +34,41 @@ def __stl_preview(color, render):
         'console.log(\'frizzle\');'+
         stl_viewer_component+' '+
         r'</script>'+
-        r'<stl-viewer model="'+f"vase_{st.session_state['session_id']}"+'.stl?cache='+str(time.time())+r'"></stl-viewer>'+
-        # r'<stl-viewer model="vase.stl?cache=' + str(time.time()) + r'"></stl-viewer>'+
-        # r'<stl-viewer model="./app/static/'+f"vase.{out}"+"_"+str(session_id)+'.stl?cache='+str(time.time())+r'"></stl-viewer>'+
+        r'<stl-viewer model="./model'+'.stl'+r'"></stl-viewer>'+
         r'</div>',
         height = 500
     )
 
+# def stl_preview(color):
+#     ## Initialize pyvista reader and plotter
+#     reader = pv.STLReader('vase.stl')
+#     plotter = pv.Plotter(
+#         border=True,
+#         window_size=[580,400]) 
+#     plotter.background_color = "white"
+
+#     ## Read data and send to plotter
+#     mesh = reader.read()
+#     plotter.add_mesh(mesh,color=color)
+
+#     ## Export to an external pythreejs
+#     model_html = "model.html"
+#     plotter.export_html(model_html)
+
+#     ## Read the exported model
+#     with open(model_html,'r') as file: 
+#         model = file.read()
+
+#     ## Show in webpage
+#     st.components.v1.html(model,height=500)
+
 
 if __name__ == "__main__":
-    # initiate sessiion state
-    if 'init' not in st.session_state:
-        st.session_state['init'] = True
+    # initialize session id
     if "session_id" not in st.session_state:
         st.session_state['session_id'] = uuid4()
+    session_id = st.session_state['session_id']
+
 
     for file in os.listdir():
         if 'file' in file:
@@ -150,10 +171,10 @@ if __name__ == "__main__":
                     .loft()
                             )
     
-    cq.exporters.export(result, f"vase_{st.session_state['session_id']}.stl")
+    cq.exporters.export(result, 'model.stl')
     cq.exporters.export(result, f"vase.{out}")
 
-        ### END BUILD123D PART
+        ### END CADQUERY PART
 
     end = time.time()
     if f'vase.{out}' not in os.listdir():
@@ -176,5 +197,5 @@ if __name__ == "__main__":
         with col1:
             render = st.selectbox(f"Render", ["material", "wireframe"], label_visibility="collapsed", key="model_render")
         with col2:
-            color = st.color_picker(f'Model Color', '#505050', label_visibility="collapsed", key="model_color")
-        __stl_preview(color, render)
+            color = st.color_picker('Model Color', '#505050', key="model_color")
+        stl_preview(color, render)
