@@ -1,6 +1,2 @@
-pyvista
-ipython
-ipywidgets
-trame
-trame-vtk
+uuid
 cadquery
